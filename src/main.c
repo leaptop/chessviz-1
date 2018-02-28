@@ -4,10 +4,37 @@
 #include <stdio.h>
 #include <string.h>
 
+typedef struct log {
+    char line[16];
+    struct log *next;
+} log_t;
+
+log_t *log_head;
+log_t *log_curr;
+
 void ExitProgram(char *msg,int code) {
     printf("%s\n",msg);
     exit(code);
 }
+
+void AddLog(char *msg) {
+    log_t *log_next;
+    strcpy(log_curr->line,msg);
+    log_next = malloc(sizeof(log_t));
+    log_curr->next = log_next;
+    log_curr = log_curr->next;
+}
+
+void PrintLog() {
+    int i = 1;
+    log_t *log_tmp = log_head;
+    while (log_tmp->next != NULL) {
+        printf("%d. %s\n", i, log_tmp->line);
+        log_tmp = log_tmp->next;
+        i++;
+    }
+}
+
 
 static int GetLine(char *buff, size_t sz) {
     int ch, extra;
@@ -52,7 +79,7 @@ void MakeKill(char *move, int m1, int m2, int pawn) {
 
 void MakeTurn() {
     int i,sp;
-    char turn[64];
+    char turn[16];
     while (GetLine(turn, sizeof(turn))) {}
     for (i = 0; i < strlen(turn); i++){
         if (turn[i] == ' ') {
@@ -60,6 +87,7 @@ void MakeTurn() {
             break;
         }
     }
+    AddLog(turn);
     for (i = 0; i < strlen(turn); i++){
         if (turn[i] == '-') {
             if (i < sp) {
@@ -77,11 +105,18 @@ void MakeTurn() {
     }
 }
 
+void InitLog() {
+    log_head = malloc(sizeof(log_t));
+    log_curr = log_head;
+}
+
 int main() {
+    InitLog();
     InitBoard();
     while(1) {
         system("clear");
         PrintBoard();
+        PrintLog();
         MakeTurn();
     }
     ClearBoard();
