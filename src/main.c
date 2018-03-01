@@ -12,6 +12,19 @@ typedef struct log {
 log_t *log_head;
 log_t *log_curr;
 
+int InBounds(char ch, char b1, char b2) {
+    return (ch >= b1 && ch <= b2);
+}
+
+int CheckSyntax(char *str,int b,int p) {
+    return ((InBounds(str[b],'A','Z') || p) &&
+            InBounds(str[b+1-p],'a','h') &&
+            InBounds(str[b+2-p],'1','8') &&
+            (str[b+3-p] == '-' || str[b+3-p] == 'x') &&
+            InBounds(str[b+4-p],'a','h') &&
+            InBounds(str[b+5-p],'1','8'));
+}
+
 void ExitProgram(char *msg,int code) {
     printf("%s\n",msg);
     exit(code);
@@ -33,6 +46,7 @@ void PrintLog() {
         log_tmp = log_tmp->next;
         i++;
     }
+    printf("%d. ",i);
 }
 
 
@@ -51,29 +65,31 @@ static int GetLine(char *buff, size_t sz) {
     return 0;
 }
 
-void MakeMove(char *move, int m1, int m2, int pawn) {
+void MakeMove(char *move, int m1, int pawn) {
     int l1 = (int)(move[m1+1-pawn] - 'a');
-    int l2 = (int)(move[m2-2] - 'a');
+    int l2 = (int)(move[m1+4-pawn] - 'a');
     int d1 = (int)(move[m1+2-pawn] - '1');
-    int d2 = (int)(move[m2-1] - '1');
-    if (((pawn && (board[l1][d1]=='P' || board[l1][d1]=='p')) || (board[l1][d1]==move[m1])) && board[l2][d2]==' ') {
+    int d2 = (int)(move[m1+5-pawn] - '1');
+    if (CheckSyntax(move,m1,pawn) && ((pawn && (board[l1][d1]=='P' || board[l1][d1]=='p')) ||
+            (board[l1][d1]==move[m1]||board[l1][d1]==move[m1]+32)) && board[l2][d2]==' ') {
         board[l2][d2] = board[l1][d1];
         board[l1][d1] = ' ';
     } else {
-        ExitProgram("Wrong Input!",1);
+        ExitProgram("Wrong Input!",2);
     }
 }
 
-void MakeKill(char *move, int m1, int m2, int pawn) {
+void MakeKill(char *move, int m1, int pawn) {
     int l1 = (int)(move[m1+1-pawn] - 'a');
-    int l2 = (int)(move[m2-2] - 'a');
+    int l2 = (int)(move[m1+4-pawn] - 'a');
     int d1 = (int)(move[m1+2-pawn] - '1');
-    int d2 = (int)(move[m2-1] - '1');
-    if (((pawn && (board[l1][d1]=='P' || board[l1][d1]=='p')) || (board[l1][d1]==move[m1])) && board[l2][d2]!=' ') {
+    int d2 = (int)(move[m1+5-pawn] - '1');
+    if (CheckSyntax(move,m1,pawn) && ((pawn && (board[l1][d1]=='P' || board[l1][d1]=='p')) ||
+            (board[l1][d1]==move[m1]||board[l1][d1]==move[m1]+32)) && board[l2][d2]!=' ') {
         board[l2][d2] = board[l1][d1];
         board[l1][d1] = ' ';
     } else {
-        ExitProgram("Wrong Input!",1);
+        ExitProgram("Wrong Input!",4);
     }
 }
 
@@ -82,7 +98,7 @@ void MakeTurn() {
     char turn[16];
     while (GetLine(turn, sizeof(turn))) {}
     for (i = 0; i < strlen(turn); i++){
-        if (turn[i] == ' ') {
+        if (turn[i] == ' ' || turn[i] == '#') {
             sp = i;
             break;
         }
@@ -91,16 +107,22 @@ void MakeTurn() {
     for (i = 0; i < strlen(turn); i++){
         if (turn[i] == '-') {
             if (i < sp) {
-                MakeMove(turn, 0, sp, (i == 2));
+                MakeMove(turn, 0, (i == 2));
             } else {
-                MakeMove(turn, sp+1, strlen(turn), (i == sp+3));
+                MakeMove(turn, sp+1, (i == sp+3));
             }
         } else if (turn[i] == 'x') {
             if (i < sp) {
-                MakeKill(turn, 0, sp, (i == 2));
+                MakeKill(turn, 0, (i == 2));
             } else {
-                MakeKill(turn, sp+1, strlen(turn), (i == sp+3));
+                MakeKill(turn, sp+1, (i == sp+3));
             }
+        } else if (turn[i]=='#') {
+            system("clear");
+            PrintBoard();
+            PrintLog();
+            ClearBoard();
+            ExitProgram("",0);
         }
     }
 }
