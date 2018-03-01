@@ -47,7 +47,6 @@ void PrintLog() {
         log_tmp = log_tmp->next;
         i++;
     }
-    printf("%d. ",i);
 }
 
 
@@ -66,7 +65,7 @@ static int GetLine(char *buff, size_t sz) {
     return 0;
 }
 
-void MakeMove(char *move, int m1, int pawn) {
+int MakeMove(char *move, int m1, int pawn) {
     int l1 = (int)(move[m1+1-pawn] - 'a');
     int l2 = (int)(move[m1+4-pawn] - 'a');
     int d1 = (int)(move[m1+2-pawn] - '1');
@@ -76,11 +75,12 @@ void MakeMove(char *move, int m1, int pawn) {
         board[l2][d2] = board[l1][d1];
         board[l1][d1] = ' ';
     } else {
-        ExitProgram("Wrong Input!",3);
+        return 0;
     }
+    return 1;
 }
 
-void MakeKill(char *move, int m1, int pawn) {
+int MakeKill(char *move, int m1, int pawn) {
     int l1 = (int)(move[m1+1-pawn] - 'a');
     int l2 = (int)(move[m1+4-pawn] - 'a');
     int d1 = (int)(move[m1+2-pawn] - '1');
@@ -90,13 +90,40 @@ void MakeKill(char *move, int m1, int pawn) {
         board[l2][d2] = board[l1][d1];
         board[l1][d1] = ' ';
     } else {
-        ExitProgram("Wrong Input!",4);
+        return 0;
     }
+    return 1;
+}
+
+int Castling(int w,int l) {
+    if (l) {
+        if (board['b'-'a'][7-7*w]==' ' && board['c'-'a'][7-7*w]==' ' && board['d'-'a'][7-7*w]==' ' &&
+                board['a'-'a'][7-7*w]=='r'-(char)(32*w) && board['e'-'a'][7-7*w]=='k'-(char)(32*w)) {
+            board['c'-'a'][7-7*w]=board['e'-'a'][7-7*w];
+            board['d'-'a'][7-7*w]=board['a'-'a'][7-7*w];
+            board['e'-'a'][7-7*w]=' ';
+            board['a'-'a'][7-7*w]=' ';
+        } else {
+            return 0;
+        }
+    } else {
+        if (board['f'-'a'][7-7*w]==' ' && board['g'-'a'][7-7*w]==' ' &&
+                board['h'-'a'][7-7*w]=='r'-(char)(32*w) && board['e'-'a'][7-7*w]=='k'-(char)(32*w)) {
+            board['g'-'a'][7-7*w]=board['e'-'a'][7-7*w];
+            board['f'-'a'][7-7*w]=board['h'-'a'][7-7*w];
+            board['e'-'a'][7-7*w]=' ';
+            board['h'-'a'][7-7*w]=' ';
+        } else {
+            return 0;
+        }
+    }
+    return 1;
 }
 
 int MakeTurn() {
     int i,sp;
     char turn[16];
+    int correct_input = 0;
     while (GetLine(turn, sizeof(turn))) {}
     for (i = 0; i < strlen(turn); i++){
         if (turn[i] == ' ' || turn[i] == '#') {
@@ -104,24 +131,35 @@ int MakeTurn() {
             break;
         }
     }
-    AddLog(turn);
     for (i = 0; i < strlen(turn); i++){
         if (turn[i] == '-') {
             if (i < sp) {
-                MakeMove(turn, 0, (i == 2));
+                if (turn[0]=='0' && turn[2]=='0') {
+                    correct_input = Castling(1,(turn[3]=='-' && turn[4]=='0'));
+                    i+=3*(turn[3]=='-' && turn[4]=='0');
+                } else {
+                    correct_input = MakeMove(turn, 0, (i == 2));
+                }
             } else {
-                MakeMove(turn, sp+1, (i == sp+3));
+                if (turn[sp+1]=='0' && turn[sp+3]=='0') {
+                    correct_input = Castling(0,(turn[sp+4]=='-' && turn[sp+5]=='0'));
+                    i+=3*(turn[sp+4]=='-' && turn[sp+5]=='0');
+                } else {
+                    correct_input = MakeMove(turn, sp+1, (i == sp+3));
+                }
             }
         } else if (turn[i] == 'x') {
             if (i < sp) {
-                MakeKill(turn, 0, (i == 2));
+                correct_input = MakeKill(turn, 0, (i == 2));
             } else {
-                MakeKill(turn, sp+1, (i == sp+3));
+                correct_input = MakeKill(turn, sp+1, (i == sp+3));
             }
         } else if (turn[i]=='#') {
+            AddLog(turn);
             return 0;
         }
     }
+    if (correct_input) AddLog(turn); else AddLog("Wrong input.");
     return 1;
 }
 
@@ -155,6 +193,7 @@ int main() {
     PrintLog();
     ClearLog();
     ClearBoard();
+    printf("\n");
     return 0;
 }
 
