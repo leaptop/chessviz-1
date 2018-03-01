@@ -34,6 +34,7 @@ void AddLog(char *msg) {
     log_t *log_next;
     strcpy(log_curr->line,msg);
     log_next = malloc(sizeof(log_t));
+    if (log_next == NULL) ExitProgram("Failed to allocate memory.",2);
     log_curr->next = log_next;
     log_curr = log_curr->next;
 }
@@ -75,7 +76,7 @@ void MakeMove(char *move, int m1, int pawn) {
         board[l2][d2] = board[l1][d1];
         board[l1][d1] = ' ';
     } else {
-        ExitProgram("Wrong Input!",2);
+        ExitProgram("Wrong Input!",3);
     }
 }
 
@@ -93,7 +94,7 @@ void MakeKill(char *move, int m1, int pawn) {
     }
 }
 
-void MakeTurn() {
+int MakeTurn() {
     int i,sp;
     char turn[16];
     while (GetLine(turn, sizeof(turn))) {}
@@ -118,29 +119,41 @@ void MakeTurn() {
                 MakeKill(turn, sp+1, (i == sp+3));
             }
         } else if (turn[i]=='#') {
-            system("clear");
-            PrintBoard();
-            PrintLog();
-            ClearBoard();
-            ExitProgram("",0);
+            return 0;
         }
     }
+    return 1;
 }
 
 void InitLog() {
     log_head = malloc(sizeof(log_t));
+    if (log_head == NULL) ExitProgram("Failed to allocate memory.",1);
     log_curr = log_head;
+}
+
+void ClearLog() {
+    log_curr = log_head;
+    log_t *log_tmp = log_curr->next;
+    while (log_tmp != NULL) {
+        free(log_curr);
+        log_curr = NULL;
+        log_curr = log_tmp;
+        log_tmp = log_tmp->next;
+    }
 }
 
 int main() {
     InitLog();
     InitBoard();
-    while(1) {
+    do {
         system("clear");
         PrintBoard();
         PrintLog();
-        MakeTurn();
-    }
+    } while (MakeTurn());
+    system("clear");
+    PrintBoard();
+    PrintLog();
+    ClearLog();
     ClearBoard();
     return 0;
 }
