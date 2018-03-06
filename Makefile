@@ -6,6 +6,7 @@ CFLAGS  = -Wall -Werror
 default: bin/chessviz
 
 test: bin/chessviz-test
+	bin/chessviz-test
 
 bin/chessviz: build/main.o build/board.o build/funcs.o bin
 	$(CC) $(CFLAGS) build/main.o build/board.o build/funcs.o -o bin/chessviz
