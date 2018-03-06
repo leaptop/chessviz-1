@@ -3,7 +3,9 @@ CFLAGS  = -Wall -Werror
 
 .PHONY: clean
 
-all: bin/chessviz
+default: bin/chessviz
+
+test: bin/chessviz-test
 
 bin/chessviz: build/main.o build/board.o build/funcs.o bin
 	$(CC) $(CFLAGS) build/main.o build/board.o build/funcs.o -o bin/chessviz
@@ -16,6 +18,12 @@ build/board.o: src/board.c src/board.h build
 
 build/funcs.o: src/funcs.c src/funcs.h build
 	$(CC) $(CFLAGS) -c src/funcs.c -o build/funcs.o
+
+bin/chessviz-test: build/main_test.o bin
+	$(CC) $(CFLAGS) build/main_test.o -o bin/chessviz-test
+
+build/main_test.o: test/main.c build
+	$(CC) $(CFLAGS) -I thirdparty -c test/main.c -o build/main_test.o
 
 build:
 	mkdir build
