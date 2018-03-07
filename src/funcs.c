@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <string.h>
 
-FILE *infile;
+FILE *infile, *outfile;
 
 int file_mode = 0;
 
@@ -18,11 +18,13 @@ log_t *log_curr;
 
 int OpenFile(char *path) {
     infile = fopen(path,"r");
-    return (infile != NULL);
+    outfile = fopen("./output.txt","w");
+    return (infile != NULL && outfile != NULL);
 }
 
 void CloseFile() {
     fclose(infile);
+    fclose(outfile);
 }
 
 void InitLog() {
@@ -55,7 +57,7 @@ void PrintLog() {
     int i = 1;
     log_t *log_tmp = log_head;
     while (log_tmp->next != NULL) {
-        printf("%d. %s\n", i, log_tmp->line);
+        fprintf(outfile,"%d. %s\n", i, log_tmp->line);
         log_tmp = log_tmp->next;
         i++;
     }

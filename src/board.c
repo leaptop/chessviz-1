@@ -6,17 +6,14 @@
 #include <stdio.h>
 #include <string.h>
 
-const int kBoardWidth = 8;
-const int kBoardHeight = 8;
-
-char** board;
+char **board;
 
 void InitBoard(){
     int i,j;
-    board = (char**)malloc(kBoardHeight * sizeof(char*));
-    for (i = 0; i < kBoardHeight; i++) {
-        board[i] = (char*)malloc(kBoardWidth * sizeof(char));
-        for (j = 0; j < kBoardWidth; j++) {
+    board = (char**)malloc(8 * sizeof(char*));
+    for (i = 0; i < 8; i++) {
+        board[i] = (char*)malloc(8 * sizeof(char));
+        for (j = 0; j < 8; j++) {
             board[i][j] = ' ';
         }
     }
@@ -25,7 +22,7 @@ void InitBoard(){
 
 void FillBoard(){
     int i;
-    for (i = 0; i < kBoardWidth; i++){
+    for (i = 0; i < 8; i++){
         board[i][1] = 'P';
         board[i][6] = 'p';
     }
@@ -49,7 +46,7 @@ void FillBoard(){
 
 void ClearBoard(){
     int i;
-    for (i = 0; i < kBoardHeight; i++) {
+    for (i = 0; i < 8; i++) {
         free(board[i]);
     }
     free(board);
@@ -58,20 +55,20 @@ void ClearBoard(){
 
 void PrintBoard(){
     int i,j;
-    for (i = -1; i < kBoardHeight; i++) {
-        for (j = -1; j < kBoardWidth; j++) {
+    for (i = -1; i < 8; i++) {
+        for (j = -1; j < 8; j++) {
             if (j < 0 && i < 0) {
-                printf("   ");
+                fprintf(outfile,"   ");
             } else  if (j < 0) {
-                printf("%d |",i + 1);
+                fprintf(outfile,"%d |",i + 1);
             } else if (i < 0) {
-                printf(" %c  ",'A' + j);
+                fprintf(outfile," %c  ",'A' + j);
             } else {
-                printf(" %c |",board[j][i]);
+                fprintf(outfile," %c |",board[j][i]);
             }
         }
-        printf("\n  ");
-        printf("---------------------------------\n");
+        fprintf(outfile,"\n  ");
+        fprintf(outfile,"---------------------------------\n");
     }
 }
 

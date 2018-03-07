@@ -16,18 +16,17 @@ int main(int argc, char **argv) {
     }
     InitLog();
     InitBoard();
-    do {
-        system("clear");
-        PrintBoard();
+    while (MakeTurn()) {
         PrintLog();
-    } while (MakeTurn());
-    system("clear");
-    PrintBoard();
+        PrintBoard();
+        fprintf(outfile,"\n\n");
+    }
     PrintLog();
+    PrintBoard();
     ClearLog();
     ClearBoard();
     if (file_mode) CloseFile();
-    printf("\n");
+    printf("Output saved to './output.txt'\n");
     return 0;
 }
 
