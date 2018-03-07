@@ -55,20 +55,20 @@ void ClearBoard(){
 
 void PrintBoard(){
     int i,j;
-    for (i = -1; i < 8; i++) {
-        for (j = -1; j < 8; j++) {
-            if (j < 0 && i < 0) {
+    for (i = 7; i >= -1; i--) {
+        fprintf(outfile,"  ---------------------------------\n");
+        for (j = 8; j > -1; j--) {
+            if (j > 7 && i < 0) {
                 fprintf(outfile,"   ");
-            } else  if (j < 0) {
+            } else  if (j > 7) {
                 fprintf(outfile,"%d |",i + 1);
             } else if (i < 0) {
-                fprintf(outfile," %c  ",'A' + j);
+                fprintf(outfile," %c  ",'H' - j);
             } else {
-                fprintf(outfile," %c |",board[j][i]);
+                fprintf(outfile," %c |",board[7-j][i]);
             }
         }
-        fprintf(outfile,"\n  ");
-        fprintf(outfile,"---------------------------------\n");
+        fprintf(outfile,"\n");
     }
 }
 
