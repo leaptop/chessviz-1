@@ -4,6 +4,8 @@
 #include <stdio.h>
 #include <string.h>
 
+FILE *infile;
+
 typedef struct log {
     char line[16];
     struct log *next;
@@ -11,6 +13,15 @@ typedef struct log {
 
 log_t *log_head;
 log_t *log_curr;
+
+int OpenFile(char *path) {
+    infile = fopen(path,"r");
+    return (infile != NULL);
+}
+
+void CloseFile() {
+    fclose(infile);
+}
 
 void InitLog() {
     log_head = malloc(sizeof(log_t));
@@ -45,6 +56,17 @@ void PrintLog() {
         printf("%d. %s\n", i, log_tmp->line);
         log_tmp = log_tmp->next;
         i++;
+    }
+}
+
+void GetLineFile(char *str, size_t sz) {
+    int i;
+    fgets(str,sz,infile);
+    for (i=0; i<strlen(str); i++) {
+        if (str[i]=='\n' || str[i]==EOF) {
+            str[i]='\0';
+            break;
+        }
     }
 }
 

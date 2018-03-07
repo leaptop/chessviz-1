@@ -24,7 +24,7 @@ CTEST(PawnMove, Correct) {
 }
 
 CTEST(PawnMove, Inorrect) {
-    int result = MakeMove("e4-f4",0,1);
+    int result = MakeMove("Pb2-b3",0,1);
     int expected = 0;
     ASSERT_EQUAL(expected,result);
 }
@@ -36,7 +36,7 @@ CTEST(KnightMove, Correct) {
 }
 
 CTEST(KnightMove, Inorrect) {
-    int result = MakeMove("g1-h3",0,1);
+    int result = MakeMove("ng1-h3",0,0);
     int expected = 0;
     ASSERT_EQUAL(expected,result);
 }
@@ -48,14 +48,13 @@ CTEST(BishopMove, Correct) {
 }
 
 CTEST(BishopMove, Inorrect) {
-    int result = MakeMove("Bg1-h2",0,0);
+    int result = MakeMove("Bg8-h7",0,0);
     int expected = 0;
     ASSERT_EQUAL(expected,result);
 }
 
 CTEST(QueenMove, Correct) {
-    MakeMove("e2-e3",0,1);
-    int result = MakeMove("Qd1-e2",0,0);
+    int result = MakeMove("Qd1-f3",0,0);
     int expected = 1;
     ASSERT_EQUAL(expected,result);
 }

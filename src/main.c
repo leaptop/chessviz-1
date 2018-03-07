@@ -4,7 +4,14 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-int main() {
+int main(int argc, char **argv) {
+    if (argc>1) {
+        if (!OpenFile(argv[1])) {
+            ExitProgram("Couldn't open the file.",3);
+        }
+    } else {
+        ExitProgram("Please, specify input file.",4);
+    }
     InitLog();
     InitBoard();
     do {
@@ -17,6 +24,7 @@ int main() {
     PrintLog();
     ClearLog();
     ClearBoard();
+    CloseFile();
     printf("\n");
     return 0;
 }

@@ -147,7 +147,8 @@ int MakeTurn() {
     int i,sp;
     char turn[16];
     int correct_input = 0;
-    while (GetLine(turn, sizeof(turn))) {}
+    GetLineFile(turn, sizeof(turn));
+    //while (GetLine(turn, sizeof(turn))) {}
     for (i = 0; i < strlen(turn); i++){
         if (turn[i] == ' ' || turn[i] == '#') {
             sp = i;
