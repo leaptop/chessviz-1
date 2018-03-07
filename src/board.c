@@ -147,13 +147,17 @@ int MakeTurn() {
     int i,sp;
     char turn[16];
     int correct_input = 0;
-    GetLineFile(turn, sizeof(turn));
-    //while (GetLine(turn, sizeof(turn))) {}
+    GetLine(turn, sizeof(turn));
+    sp=-1;
     for (i = 0; i < strlen(turn); i++){
         if (turn[i] == ' ' || turn[i] == '#') {
             sp = i;
             break;
         }
+    }
+    if (sp<0) {
+        AddLog("Wrong input.");
+        return 1;
     }
     for (i = 0; i < strlen(turn); i++){
         if (turn[i] == '-') {

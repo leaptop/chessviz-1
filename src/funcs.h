@@ -3,14 +3,15 @@
 
 #include <stdlib.h>
 
+extern int file_mode;
+
 int OpenFile(char*);
 void CloseFile();
 void InitLog();
 void ClearLog();
 void AddLog(char*);
 void PrintLog();
-void GetLineFile(char*,size_t);
-int GetLine(char*, size_t);
+void GetLine(char*,size_t);
 void ExitProgram(char*, int);
 
 #endif //CHESSVIZ_FUNCS_H_

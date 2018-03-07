@@ -8,9 +8,11 @@ int main(int argc, char **argv) {
     if (argc>1) {
         if (!OpenFile(argv[1])) {
             ExitProgram("Couldn't open the file.",3);
+        } else {
+            file_mode = 1;
         }
     } else {
-        ExitProgram("Please, specify input file.",4);
+        file_mode = 0;
     }
     InitLog();
     InitBoard();
@@ -24,7 +26,7 @@ int main(int argc, char **argv) {
     PrintLog();
     ClearLog();
     ClearBoard();
-    CloseFile();
+    if (file_mode) CloseFile();
     printf("\n");
     return 0;
 }

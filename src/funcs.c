@@ -6,6 +6,8 @@
 
 FILE *infile;
 
+int file_mode = 0;
+
 typedef struct log {
     char line[16];
     struct log *next;
@@ -63,14 +65,14 @@ void GetLineFile(char *str, size_t sz) {
     int i;
     fgets(str,sz,infile);
     for (i=0; i<strlen(str); i++) {
-        if (str[i]=='\n' || str[i]==EOF) {
+        if (str[i]=='\n') {
             str[i]='\0';
             break;
         }
     }
 }
 
-int GetLine(char *buff, size_t sz) {
+int GetLineStd(char *buff, size_t sz) {
     int ch, extra;
     if (fgets (buff, sz, stdin) == NULL) {
         return 1;
@@ -83,6 +85,18 @@ int GetLine(char *buff, size_t sz) {
     }
     buff[strlen(buff)-1] = '\0';
     return 0;
+}
+
+void GetLine(char *str, size_t sz) {
+    if (file_mode) {
+        if (feof(infile)) {
+            ExitProgram("Unexpected end of file.",3);
+        } else {
+            GetLineFile(str,sz);
+        }
+    } else {
+        while (GetLineStd(str,sz)) {}
+    }
 }
 
 void ExitProgram(char *msg,int code) {
