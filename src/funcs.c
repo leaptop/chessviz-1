@@ -4,6 +4,10 @@
 #include <stdio.h>
 #include <string.h>
 
+FILE *infile, *outfile;
+
+int file_mode = 0;
+
 typedef struct log {
     char line[16];
     struct log *next;
@@ -11,6 +15,17 @@ typedef struct log {
 
 log_t *log_head;
 log_t *log_curr;
+
+int OpenFile(char *path) {
+    infile = fopen(path,"r");
+    outfile = fopen("./output.txt","w");
+    return (infile != NULL && outfile != NULL);
+}
+
+void CloseFile() {
+    fclose(infile);
+    fclose(outfile);
+}
 
 void InitLog() {
     log_head = malloc(sizeof(log_t));
@@ -42,13 +57,24 @@ void PrintLog() {
     int i = 1;
     log_t *log_tmp = log_head;
     while (log_tmp->next != NULL) {
-        printf("%d. %s\n", i, log_tmp->line);
+        fprintf(outfile,"%d. %s\n", i, log_tmp->line);
         log_tmp = log_tmp->next;
         i++;
     }
 }
 
-int GetLine(char *buff, size_t sz) {
+void GetLineFile(char *str, size_t sz) {
+    int i;
+    fgets(str,sz,infile);
+    for (i=0; i<strlen(str); i++) {
+        if (str[i]=='\n') {
+            str[i]='\0';
+            break;
+        }
+    }
+}
+
+int GetLineStd(char *buff, size_t sz) {
     int ch, extra;
     if (fgets (buff, sz, stdin) == NULL) {
         return 1;
@@ -61,6 +87,18 @@ int GetLine(char *buff, size_t sz) {
     }
     buff[strlen(buff)-1] = '\0';
     return 0;
+}
+
+void GetLine(char *str, size_t sz) {
+    if (file_mode) {
+        if (feof(infile)) {
+            ExitProgram("Unexpected end of file.",3);
+        } else {
+            GetLineFile(str,sz);
+        }
+    } else {
+        while (GetLineStd(str,sz)) {}
+    }
 }
 
 void ExitProgram(char *msg,int code) {

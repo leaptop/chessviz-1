@@ -4,20 +4,29 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-int main() {
+int main(int argc, char **argv) {
+    if (argc>1) {
+        if (!OpenFile(argv[1])) {
+            ExitProgram("Couldn't open the file.",3);
+        } else {
+            file_mode = 1;
+        }
+    } else {
+        file_mode = 0;
+    }
     InitLog();
     InitBoard();
-    do {
-        system("clear");
-        PrintBoard();
+    while (MakeTurn()) {
         PrintLog();
-    } while (MakeTurn());
-    system("clear");
-    PrintBoard();
+        PrintBoard();
+        fprintf(outfile,"\n\n");
+    }
     PrintLog();
+    PrintBoard();
     ClearLog();
     ClearBoard();
-    printf("\n");
+    if (file_mode) CloseFile();
+    printf("Output saved to './output.txt'\n");
     return 0;
 }
 
