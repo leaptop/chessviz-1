@@ -1,6 +1,7 @@
 #include "board.h"
 
 #include "funcs.h"
+#include "board_print_html.h"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -54,21 +55,25 @@ void ClearBoard(){
 }
 
 void PrintBoard(){
-    int i,j;
-    for (i = 7; i >= -1; i--) {
-        fprintf(outfile,"  ---------------------------------\n");
-        for (j = 8; j > -1; j--) {
-            if (j > 7 && i < 0) {
-                fprintf(outfile,"   ");
-            } else  if (j > 7) {
-                fprintf(outfile,"%d |",i + 1);
-            } else if (i < 0) {
-                fprintf(outfile," %c  ",'H' - j);
-            } else {
-                fprintf(outfile," %c |",board[7-j][i]);
+    if (!html_mode) {
+        int i,j;
+        for (i = 7; i >= -1; i--) {
+            fprintf(outfile,"  ---------------------------------\n");
+            for (j = 8; j > -1; j--) {
+                if (j > 7 && i < 0) {
+                    fprintf(outfile,"   ");
+                } else  if (j > 7) {
+                    fprintf(outfile,"%d |",i + 1);
+                } else if (i < 0) {
+                    fprintf(outfile," %c  ",'H' - j);
+                } else {
+                    fprintf(outfile," %c |",board[7-j][i]);
+                }
             }
+            fprintf(outfile,"\n");
         }
-        fprintf(outfile,"\n");
+    } else {
+        PrintBoardHtml();
     }
 }
 

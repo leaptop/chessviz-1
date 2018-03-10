@@ -7,6 +7,7 @@
 FILE *infile, *outfile;
 
 int file_mode = 0;
+int html_mode = 0;
 
 typedef struct log {
     char line[16];
@@ -18,7 +19,8 @@ log_t *log_curr;
 
 int OpenFile(char *path) {
     infile = fopen(path,"r");
-    outfile = fopen("./output.txt","w");
+    if (html_mode) outfile = fopen("./output.html","w");
+        else outfile = fopen("./output.txt","w");
     return (infile != NULL && outfile != NULL);
 }
 
@@ -56,11 +58,14 @@ void AddLog(char *msg) {
 void PrintLog() {
     int i = 1;
     log_t *log_tmp = log_head;
+    if (html_mode) fprintf(outfile,"\n<caption>");
     while (log_tmp->next != NULL) {
-        fprintf(outfile,"%d. %s\n", i, log_tmp->line);
+        if (html_mode) fprintf(outfile,"%d. %s<br>\n", i, log_tmp->line);
+            else fprintf(outfile,"%d. %s\n", i, log_tmp->line);
         log_tmp = log_tmp->next;
         i++;
     }
+    if (html_mode) fprintf(outfile,"</caption>\n");
 }
 
 void GetLineFile(char *str, size_t sz) {

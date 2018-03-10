@@ -5,6 +5,8 @@
 #include <stdio.h>
 
 extern int file_mode;
+extern int html_mode;
+
 extern FILE *infile,*outfile;
 
 int OpenFile(char*);
