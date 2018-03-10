@@ -9,6 +9,7 @@ extern int html_mode;
 
 extern FILE *infile,*outfile;
 
+int OpenOutFile();
 int OpenFile(char*);
 void CloseFile();
 void InitLog();

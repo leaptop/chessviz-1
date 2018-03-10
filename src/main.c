@@ -12,7 +12,7 @@ void ArgsHandler(char **argv, int n) {
         if (!strcmp(argv[i],"--html")) html_mode = 1;
         if (!strcmp(argv[i],"--file") && i<n-1) {
             if (!OpenFile(argv[i+1])) {
-                ExitProgram("Couldn't open the file.",3);
+                ExitProgram("Couldn't open input file.",1);
             } else {
                 file_mode = 1;
             }
@@ -22,6 +22,9 @@ void ArgsHandler(char **argv, int n) {
 
 int main(int argc, char **argv) {
     ArgsHandler(argv,argc);
+    if (!OpenOutFile()) {
+        ExitProgram("Couldn't open output file.",1);
+    }
     InitLog();
     InitBoard();
     if (html_mode) PrintHtmlHead();

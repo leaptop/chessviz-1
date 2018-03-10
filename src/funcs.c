@@ -17,11 +17,15 @@ typedef struct log {
 log_t *log_head;
 log_t *log_curr;
 
-int OpenFile(char *path) {
-    infile = fopen(path,"r");
+int OpenOutFile() {
     if (html_mode) outfile = fopen("./output.html","w");
         else outfile = fopen("./output.txt","w");
-    return (infile != NULL && outfile != NULL);
+   return (outfile != NULL);
+}
+
+int OpenFile(char *path) {
+    infile = fopen(path,"r");
+    return (infile != NULL);
 }
 
 void CloseFile() {

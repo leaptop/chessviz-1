@@ -64,9 +64,9 @@ void PrintHtmlBottom() {
 void PrintBoardHtml() {
 fprintf(outfile,R"(<table class="chessboard"> )");
   PrintLog();
-  for (int i=0;i<8;i++) {
+  for (int i=7;i>=0;i--) {
     fprintf(outfile,"<tr>\n");
-    for (int j=0;j<8;j++) {
+    for (int j=7;j>=0;j--) {
         char tmp[2];
         tmp[0] = board[j][i];
         tmp[1] = ' ';
