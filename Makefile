@@ -24,7 +24,7 @@ build/funcs.o: src/funcs.c src/funcs.h build
 	$(CC) $(CFLAGS) -c src/funcs.c -o build/funcs.o
 
 bin/chessviz-test: build/main_test.o build/board.o build/funcs.o src bin
-	$(CC) $(CFLAGS) build/main_test.o build/board.o build/funcs.o -o bin/chessviz-test
+	$(CC) $(CFLAGS) build/main_test.o build/board.o build/board_print_html.o build/funcs.o -o bin/chessviz-test
 
 build/main_test.o: test/main.c thirdparty/ctest.h src/board.h src/funcs.h build
 	$(CC) $(CFLAGS) -I thirdparty -I src -c test/main.c -o build/main_test.o
