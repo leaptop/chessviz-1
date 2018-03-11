@@ -22,24 +22,26 @@ void ArgsHandler(char **argv, int n) {
 
 int main(int argc, char **argv) {
     ArgsHandler(argv,argc);
-    if (!OpenOutFile()) {
-        ExitProgram("Couldn't open output file.",1);
+    if (!html_mode) {
+        OpenOutFile();
+    } else {
+        system("rm -rf html_output");
+        system("mkdir html_output");
     }
     InitLog();
     InitBoard();
-    if (html_mode) PrintHtmlHead();
+    PrintBoard(0);
     while (MakeTurn()) {
         if (!html_mode) PrintLog();
-        PrintBoard();
+        PrintBoard(0);
         fprintf(outfile,"\n\n");
     }
     if (!html_mode) PrintLog();
-    PrintBoard();
-    if (html_mode) PrintHtmlBottom();
+    PrintBoard(1);
     ClearLog();
     ClearBoard();
     if (file_mode) CloseFile();
-    if (html_mode) printf("Output saved to './output.html'\n");
+    if (html_mode) printf("Output saved to 'html_output'\n");
         else printf("Output saved to './output.txt'\n");
     return 0;
 }

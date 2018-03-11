@@ -54,7 +54,7 @@ void ClearBoard(){
     board = NULL;
 }
 
-void PrintBoard(){
+void PrintBoard(int last){
     if (!html_mode) {
         int i,j;
         for (i = 7; i >= -1; i--) {
@@ -73,7 +73,14 @@ void PrintBoard(){
             fprintf(outfile,"\n");
         }
     } else {
-        PrintBoardHtml();
+        char tmp[64];
+        sprintf(tmp,"./html_output/output_%d.html",html_page);
+        html_page++;
+        outfile = fopen(tmp,"w");
+        PrintHtmlHead();
+        PrintBoardHtml(last);
+        PrintHtmlBottom();
+        fclose(outfile);
     }
 }
 

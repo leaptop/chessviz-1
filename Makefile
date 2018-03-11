@@ -23,7 +23,7 @@ build/board_print_html.o: src/board_print_html.c src/board_print_html.h src/boar
 build/funcs.o: src/funcs.c src/funcs.h build
 	$(CC) $(CFLAGS) -c src/funcs.c -o build/funcs.o
 
-bin/chessviz-test: build/main_test.o build/board.o build/funcs.o src bin
+bin/chessviz-test: build/main_test.o build/board.o build/board_print_html.o build/funcs.o src bin
 	$(CC) $(CFLAGS) build/main_test.o build/board.o build/board_print_html.o build/funcs.o -o bin/chessviz-test
 
 build/main_test.o: test/main.c thirdparty/ctest.h src/board.h src/funcs.h build

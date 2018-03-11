@@ -6,7 +6,7 @@ char** board;
 void InitBoard();
 void FillBoard();
 void ClearBoard();
-void PrintBoard();
+void PrintBoard(int);
 int InBounds(char, char, char);
 int CheckSyntax(char*, int, int);
 int MakeMove(char*, int, int);

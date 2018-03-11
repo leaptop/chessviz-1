@@ -6,10 +6,11 @@
 
 extern int file_mode;
 extern int html_mode;
+extern int html_page;
 
 extern FILE *infile,*outfile;
 
-int OpenOutFile();
+void OpenOutFile();
 int OpenFile(char*);
 void CloseFile();
 void InitLog();
